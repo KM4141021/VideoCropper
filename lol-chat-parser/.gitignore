@@ -1,0 +1,32 @@
+# Videos
+*.mp4
+*.avi
+*.mov
+*.mkv
+
+# Virtual environment
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Build / dist
+*.egg-info/
+dist/
+build/
+
+# PaddleOCR model cache
+.paddleocr/
+inference/
+
+# Output files
+*.json
+!examples/*.json
+
+# IDE
+.vscode/
+.idea/

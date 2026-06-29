@@ -70,24 +70,54 @@ def calibrate(
         "crop_config.json", "--output", "-o", help="Path to save the crop config JSON"
     ),
     timestamp: float = typer.Option(
-        0.0, "--timestamp", "-t", help="Video timestamp in seconds to use for selection"
+        -1.0, "--timestamp", "-t",
+        help="Timestamp in seconds to display (-1 = middle of video)",
     ),
 ) -> None:
     """
     Interactively select the chat box rectangle from a video frame.
 
-    An OpenCV window opens. Click and drag to draw a rectangle around the
-    League of Legends chat area, then press ENTER or SPACE to confirm.
-    Press ESC to abort without saving.
+    An OpenCV window opens showing the full frame scaled to fit your screen.
+    Click and drag to draw a rectangle around the League chat area, then
+    press ENTER or SPACE to confirm. Press ESC to abort without saving.
     """
     _require_file(video, "video")
 
-    typer.echo(f"Loading frame at {timestamp:.1f}s from {video} …")
+    fps, total_frames = get_video_info(video)
+    if timestamp < 0:
+        timestamp = (total_frames / fps) / 2
+        typer.echo(f"Using mid-video frame at {timestamp:.1f}s …")
+    else:
+        typer.echo(f"Loading frame at {timestamp:.1f}s …")
+
     try:
         frame = get_frame_at(video, timestamp)
     except RuntimeError as exc:
         typer.echo(f"Error: {exc}", err=True)
         raise typer.Exit(1)
+
+    # Scale frame down so it fits on screen while keeping the full image visible
+    orig_h, orig_w = frame.shape[:2]
+    try:
+        import ctypes
+        user32 = ctypes.windll.user32  # type: ignore[attr-defined]
+        screen_w = user32.GetSystemMetrics(0)
+        screen_h = user32.GetSystemMetrics(1)
+    except Exception:
+        screen_w, screen_h = 1920, 1080
+
+    max_w = int(screen_w * 0.92)
+    max_h = int(screen_h * 0.88)
+    scale = min(max_w / orig_w, max_h / orig_h, 1.0)
+
+    if scale < 1.0:
+        display_w = int(orig_w * scale)
+        display_h = int(orig_h * scale)
+        display_frame = cv2.resize(frame, (display_w, display_h), interpolation=cv2.INTER_AREA)
+        typer.echo(f"Frame scaled {orig_w}x{orig_h} → {display_w}x{display_h} to fit screen")
+    else:
+        display_frame = frame
+        scale = 1.0
 
     typer.echo(
         "\nInstructions:\n"
@@ -98,13 +128,21 @@ def calibrate(
     )
 
     window_title = "Select Chat Box — ENTER to confirm | ESC to abort"
-    roi = cv2.selectROI(window_title, frame, fromCenter=False, showCrosshair=True)
+    cv2.namedWindow(window_title, cv2.WINDOW_NORMAL)
+    cv2.resizeWindow(window_title, display_frame.shape[1], display_frame.shape[0])
+    roi = cv2.selectROI(window_title, display_frame, fromCenter=False, showCrosshair=True)
     cv2.destroyAllWindows()
 
-    x, y, w, h = (int(v) for v in roi)
-    if w == 0 or h == 0:
+    rx, ry, rw, rh = roi
+    if rw == 0 or rh == 0:
         typer.echo("No region selected — aborting.", err=True)
         raise typer.Exit(1)
+
+    # Scale ROI coordinates back to original video resolution
+    x = int(rx / scale)
+    y = int(ry / scale)
+    w = int(rw / scale)
+    h = int(rh / scale)
 
     config = CropConfig(x=x, y=y, width=w, height=h)
     output.write_text(config.model_dump_json(indent=2), encoding="utf-8")
