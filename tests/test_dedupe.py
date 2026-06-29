@@ -1,8 +1,8 @@
 """Tests for duplicate-message suppression."""
 import pytest
 
-from lol_chat_parser.dedupe import deduplicate, normalize_for_dedup
-from lol_chat_parser.models import ChatMessage
+from chat_parser.dedupe import deduplicate, normalize_for_dedup
+from chat_parser.models import ChatMessage
 
 
 def _msg(ts: float, sender: str, chat: str, confidence: float = 0.9) -> ChatMessage:

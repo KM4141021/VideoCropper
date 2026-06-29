@@ -24,20 +24,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 .venv\Scripts\python.exe -m pytest tests/test_dedupe.py::test_best_confidence_retained
 
 # Run with coverage
-.venv\Scripts\python.exe -m pytest --cov=lol_chat_parser --cov-report=term-missing
+.venv\Scripts\python.exe -m pytest --cov=chat_parser --cov-report=term-missing
 ```
 
 ## CLI usage
 
 ```powershell
 # Step 1 — pick chat box (opens OpenCV window, saves coordinates)
-.venv\Scripts\python.exe -m lol_chat_parser calibrate --video lol222.mp4 --output crop_config.json
+.venv\Scripts\python.exe -m chat_parser calibrate --video lol222.mp4 --output crop_config.json
 
 # Step 2 — optional cropped video preview
-.venv\Scripts\python.exe -m lol_chat_parser crop --video lol222.mp4 --config crop_config.json --output chat_only.mp4
+.venv\Scripts\python.exe -m chat_parser crop --video lol222.mp4 --config crop_config.json --output chat_only.mp4
 
 # Step 3 — extract chat to JSON
-.venv\Scripts\python.exe -m lol_chat_parser parse --video lol222.mp4 --config crop_config.json --output chat_messages.json --champions examples/champion_names.example.json --sample-rate 1.0
+.venv\Scripts\python.exe -m chat_parser parse --video lol222.mp4 --config crop_config.json --output chat_messages.json --champions examples/champion_names.example.json --sample-rate 1.0
 ```
 
 ## Architecture

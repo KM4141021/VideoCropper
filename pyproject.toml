@@ -3,9 +3,9 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "lol-chat-parser"
+name = "chat-parser"
 version = "0.1.0"
-description = "Local League of Legends chat extraction and parsing tool"
+description = "Local video screen recording chat extraction and parsing tool"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
@@ -24,10 +24,10 @@ dependencies = [
 dev = ["pytest>=7.4.0", "pytest-cov>=4.1.0"]
 
 [project.scripts]
-lol-chat-parser = "lol_chat_parser.cli:main"
+chat-parser = "chat_parser.cli:main"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/lol_chat_parser"]
+packages = ["src/chat_parser"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

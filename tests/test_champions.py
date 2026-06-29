@@ -3,7 +3,7 @@ import json
 import pytest
 from pathlib import Path
 
-from lol_chat_parser.champions import ChampionMatcher
+from chat_parser.champions import ChampionMatcher
 
 CHAMPIONS = [
     "Jinx", "Caitlyn", "Thresh", "LeBlanc", "Kai'Sa",

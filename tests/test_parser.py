@@ -1,8 +1,8 @@
 """Tests for chat-line parsing logic."""
 import pytest
 
-from lol_chat_parser.champions import ChampionMatcher
-from lol_chat_parser.parser import parse_chat_line
+from chat_parser.champions import ChampionMatcher
+from chat_parser.parser import parse_chat_line
 
 
 CHAMPIONS = ["Jinx", "Caitlyn", "Thresh", "LeBlanc", "Miss Fortune", "Kai'Sa"]

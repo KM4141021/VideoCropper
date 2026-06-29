@@ -1,5 +1,5 @@
 """
-CLI entry point for lol-chat-parser.
+CLI entry point for chat-parser.
 
 Commands:
   calibrate  — pick the chat-box rectangle interactively
@@ -36,8 +36,8 @@ from .preprocess import preprocess_for_ocr
 from .video import get_frame_at, get_video_info, iter_frames_at_rate
 
 app = typer.Typer(
-    name="lol-chat-parser",
-    help="Extract and parse chat messages from League of Legends screen recordings.",
+    name="chat-parser",
+    help="Extract and parse chat messages from game screen recordings.",
     add_completion=False,
 )
 
@@ -78,7 +78,7 @@ def calibrate(
     Interactively select the chat box rectangle from a video frame.
 
     An OpenCV window opens showing the full frame scaled to fit your screen.
-    Click and drag to draw a rectangle around the League chat area, then
+    Click and drag to draw a rectangle around the chat area, then
     press ENTER or SPACE to confirm. Press ESC to abort without saving.
     """
     _require_file(video, "video")
