@@ -1,0 +1,18 @@
+# Core runtime
+opencv-python>=4.8.0
+numpy>=1.24.0
+pydantic>=2.5.0
+typer>=0.9.0
+tqdm>=4.66.0
+rapidfuzz>=3.5.0
+
+# OCR — primary
+paddlepaddle>=2.6.0
+paddleocr>=2.7.0
+
+# OCR — optional fallback
+pytesseract>=0.3.10
+
+# Dev / testing
+pytest>=7.4.0
+pytest-cov>=4.1.0
